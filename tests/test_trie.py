@@ -33,6 +33,9 @@ class TestTrie:
 
         assert "rofl" not in trie
 
+    def test_prefix_not_in_trie(self, trie):
+        assert "ca" not in trie
+
     def test_len(self, words, trie):
         assert len(trie) == len(words)
 
@@ -57,6 +60,14 @@ class TestTrie:
         assert list(trie) == expected
         assert list(trie.complete("ca")) == expected
 
+    @pytest.mark.parametrize("words", [["cat"] * 3 + ["car"] * 1 + ["cartoon"] * 2])
+    def test_query_count(self, trie):
+        assert trie.count("cat") == 3
+        assert trie.count("car") == 1
+        assert trie.count("cartoon") == 2
+        assert trie.count("carate") == 0
+        assert trie.count("ca") == 0
+
     @pytest.mark.parametrize(
         ("input_groups", "expected"),
         [
@@ -70,9 +81,7 @@ class TestTrie:
         assert list(trie.complete(input_groups)) == expected
 
     @pytest.mark.parametrize(
-        ("words", "input_groups", "expected"), [
-            (['cat'] * 3 + ['car'], ['cv', 'as', 'rt'], ['cat', 'car'])
-        ]
+        ("words", "input_groups", "expected"), [(["cat"] * 3 + ["car"], ["cv", "as", "rt"], ["cat", "car"])]
     )
     def test_ambiguous_completion_sorted_by_use(self, trie, input_groups, expected):
         assert list(trie.complete(input_groups)) == expected
