@@ -1,14 +1,18 @@
 from typing import Iterable
 import itertools
 
-TTrieEntryResult = tuple["TrieNode", str]
 
 
 class TrieNode:
-    def __init__(self, value: str):
+    def __init__(self, value: str, parent: 'TrieNode | None' = None):
         self._children: dict[str, TrieNode] = {}
         self._insertions_count = 0
         self._value = value
+        self._parent = parent
+
+    @property
+    def word(self) -> str:
+        return ''.join(n._value for n in self._bottom_up_traversal())[::-1]
 
     def insert(self, word: str, multiplier: int = 1) -> None:
         if not isinstance(word, str):
@@ -17,22 +21,16 @@ class TrieNode:
         if not word:
             return
 
-        child = self._children.setdefault(word[0], TrieNode(word[0]))
+        child = self._children.setdefault(word[0], TrieNode(word[0], self))
         if len(word) == 1:
             child._insertions_count += multiplier
         else:
             child.insert(word[1:], multiplier)
 
-    def complete(self, prefix: str) -> Iterable[str]:
-        return self.complete_ambiguous(prefix)
+    def complete(self, prefix_groups: list[str] | str) -> Iterable[str]:
+        return self._flatten_nodes(self._complete(prefix_groups))
 
-    def _flatten_nodes(self, nodes: Iterable[TTrieEntryResult]) -> Iterable[str]:
-        return (word for _, word in sorted(nodes, key=lambda entry: -entry[0]._insertions_count))
-
-    def complete_ambiguous(self, prefix_groups: list[str]) -> Iterable[str]:
-        return self._flatten_nodes(self._complete_ambiguous(prefix_groups))
-
-    def _complete_ambiguous(self, prefix_groups: list[str]) -> Iterable[TTrieEntryResult]:
+    def _complete(self, prefix_groups: list[str] | str) -> Iterable['TrieNode']:
         if not prefix_groups:
             yield from self._iter_word_nodes()
             return
@@ -40,16 +38,23 @@ class TrieNode:
         for letter in prefix_groups[0]:
             child = self._children.get(letter)
             if child is not None:
-                for node, suffix in child._complete_ambiguous(prefix_groups[1:]):
-                    yield node, self._value + suffix
+                yield from child._complete(prefix_groups[1:])
 
-    def _iter_word_nodes(self) -> Iterable[TTrieEntryResult]:
+    def _bottom_up_traversal(self) -> Iterable['TrieNode']:
+        current = self
+        while current is not None:
+            yield current
+            current = current._parent
+
+    def _flatten_nodes(self, nodes: Iterable['TrieNode']) -> Iterable[str]:
+        return (node.word for node in sorted(nodes, key=lambda node: -node._insertions_count))
+
+    def _iter_word_nodes(self) -> Iterable['TrieNode']:
         if self._insertions_count:
-            yield self, self._value
+            yield self
 
         for child in self._children.values():
-            for node, suffix in child._iter_word_nodes():
-                yield node, self._value + suffix
+            yield from child._iter_word_nodes()
 
     def __iter__(self) -> Iterable[str]:
         return self._flatten_nodes(self._iter_word_nodes())

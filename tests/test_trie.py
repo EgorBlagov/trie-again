@@ -67,7 +67,7 @@ class TestTrie:
         ],
     )
     def test_ambiguous_completion(self, trie, input_groups, expected):
-        assert list(trie.complete_ambiguous(input_groups)) == expected
+        assert list(trie.complete(input_groups)) == expected
 
     @pytest.mark.parametrize(
         ("words", "input_groups", "expected"), [
@@ -75,4 +75,4 @@ class TestTrie:
         ]
     )
     def test_ambiguous_completion_sorted_by_use(self, trie, input_groups, expected):
-        assert list(trie.complete_ambiguous(input_groups)) == expected
+        assert list(trie.complete(input_groups)) == expected
