@@ -1,3 +1,10 @@
 __pycache__/
 *.py[cod]
 .vscode/
+.coverage
+dist/
+*.egg-info
+.nox
+.pytest_cache
+.benchmarks
+.mypy_cache
