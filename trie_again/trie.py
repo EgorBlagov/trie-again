@@ -81,12 +81,12 @@ class Trie:
         candidates = [self._root]
         for group in prefix_groups:
             new_candidates = []
-            for _ in range(len(candidates)):
-                last = candidates.pop()
+            for each in candidates:
                 for letter in group:
-                    if letter in last._children:
-                        new_candidates.append(last._children[letter])
-            candidates.extend(new_candidates)
+                    if letter in each._children:
+                        new_candidates.append(each._children[letter])
+
+            candidates = new_candidates
 
         return self._flatten_nodes([node for c in candidates for node in c.word_nodes])
 
