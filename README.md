@@ -96,3 +96,8 @@ poetry run mypy .
 poetry run coverage run -m pytest && poetry run coverage report -m
 
 ```
+
+## Read an article about the trie, friends!
+
+https://blagovdaryu.hashnode.dev/ok-lets-trie-t9-in-python
+
