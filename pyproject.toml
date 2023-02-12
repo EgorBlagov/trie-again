@@ -14,11 +14,10 @@ description = "Trie data structure for prefix search and text completion"
 authors = ["Egor Blagov <e.m.blagov@gmail.com>"]
 license = "ISC"
 readme = "README.md"
-
+build = 'build.py'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-setuptools = "^66.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -33,8 +32,7 @@ coverage = {extras = ["toml"], version = "^7.1.0"}
 mypy = "^0.991"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core", "Cython", "setuptools"]
 
 [tool.coverage.run]
 omit = [".*", "*/site-packages/*", "*/tests/*"]
