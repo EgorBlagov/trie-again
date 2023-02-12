@@ -16,6 +16,9 @@ pip install trie-again
 # create an instance
 from trie_again import Trie
 
+# if you want to use faster version
+from trie_again import CyTrie
+
 trie = Trie()
 
 # insert a single word

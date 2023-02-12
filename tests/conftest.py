@@ -1,6 +1,5 @@
 import pytest
-from trie_again import Trie
-from trie_again.cytrie import CyTrie
+from trie_again import Trie, CyTrie
 
 
 def pytest_addoption(parser):

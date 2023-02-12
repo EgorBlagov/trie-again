@@ -9,12 +9,11 @@ line-length = 88
 
 [tool.poetry]
 name = "trie-again"
-version = "0.2.0"
+version = "0.2.2"
 description = "Trie data structure for prefix search and text completion"
 authors = ["Egor Blagov <e.m.blagov@gmail.com>"]
 license = "ISC"
 readme = "README.md"
-build = 'build.py'
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -28,11 +27,16 @@ pytest-benchmark = "^4.0.0"
 flake8 = "^6.0.0"
 flake8-bugbear = "^23.1.20"
 pre-commit = "^3.0.4"
-coverage = {extras = ["toml"], version = "^7.1.0"}
+coverage = { extras = ["toml"], version = "^7.1.0" }
 mypy = "^0.991"
 
+[tool.poetry.build]
+generate-setup-file = false
+script = 'build.py'
+
 [build-system]
-requires = ["poetry-core", "Cython", "setuptools"]
+requires = ["poetry-core", "Cython"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.coverage.run]
 omit = [".*", "*/site-packages/*", "*/tests/*"]
