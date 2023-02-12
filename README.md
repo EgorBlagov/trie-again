@@ -84,6 +84,9 @@ poetry run pytest --benchmark
 
 ```bash
 
+# very start
+poetry install
+
 # install pre commit
 poetry run pre-commit install
 
@@ -95,9 +98,10 @@ poetry run mypy .
 # coverage
 poetry run coverage run -m pytest && poetry run coverage report -m
 
+# build package: limiting to sdist to compile it on install
+poetry build -f sdist
 ```
 
 ## Read an article about the trie, friends!
 
 https://blagovdaryu.hashnode.dev/ok-lets-trie-t9-in-python
-

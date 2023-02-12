@@ -9,4 +9,5 @@ dist/
 .benchmarks
 .mypy_cache
 *.so
+cytrie.cpp
 build/

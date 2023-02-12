@@ -12,7 +12,7 @@ def words(request):
     with open(os.path.join(os.path.dirname(__file__), request.param)) as f:
         result = json.load(f)
     items = list(result.items())
-    return dict(items[: len(items) // 5])
+    return dict(items[: len(items)])
 
 
 @pytest.mark.benchmark

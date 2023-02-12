@@ -9,7 +9,7 @@ line-length = 88
 
 [tool.poetry]
 name = "trie-again"
-version = "0.1.0"
+version = "0.2.0"
 description = "Trie data structure for prefix search and text completion"
 authors = ["Egor Blagov <e.m.blagov@gmail.com>"]
 license = "ISC"

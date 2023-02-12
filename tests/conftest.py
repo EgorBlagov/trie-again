@@ -1,5 +1,6 @@
 import pytest
 from trie_again import Trie
+from trie_again.cytrie import CyTrie
 
 
 def pytest_addoption(parser):
@@ -24,6 +25,7 @@ def pytest_collection_modifyitems(config, items):
 @pytest.fixture(
     params=[
         Trie,
+        CyTrie,
     ]
 )
 def trie_impl(request):
