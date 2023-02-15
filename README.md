@@ -7,6 +7,9 @@
 
 pip install trie-again
 
+# in some cases you might want to adjust your compiler (the same is applicable for `poetry install`)
+CC='gcc' CFLAGS='-march=native' pip install trie-again
+
 ```
 
 ## Usage
@@ -87,7 +90,7 @@ poetry run pytest --benchmark
 
 ```bash
 
-# very start
+# very start (adjust compiler options if needed)
 poetry install
 
 # install pre commit

@@ -10,7 +10,7 @@ extension = Extension(
     [
         os.path.join(cython_dir, "cytrie.pyx"),
     ],
-    extra_compile_args=["-march=native", "-O3"],
+    extra_compile_args=["-O3", "-std=c++17"],
 )
 
 ext_modules = cythonize([extension], include_path=[cython_dir])
