@@ -1,6 +1,5 @@
 #include "Trie.h"
 #include <string>
-#include <memory>
 #include <stack>
 #include <list>
 #include <algorithm>
@@ -9,15 +8,15 @@
 #include <locale>
 #include <codecvt>
 
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> > converter;
 
-
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-std::wstring TrieNode::convert(const std::string& word) const {
+std::wstring TrieNode::convert(const std::string &word) const
+{
     return converter.from_bytes(word);
 }
 
-std::string TrieNode::reconvert(const std::wstring& word) const {
+std::string TrieNode::reconvert(const std::wstring &word) const
+{
     return converter.to_bytes(word);
 }
 
@@ -57,7 +56,6 @@ std::list<const TrieNode *> TrieNode::word_nodes() const
 
     return result;
 }
-
 
 TrieNode::TrieNode(wchar_t letter, TrieNode *parent)
     : letter(letter), parent(parent), insertion_count(0), children()
@@ -112,6 +110,27 @@ int TrieNode::count(const std::string &word_utf8) const
     return current->insertion_count;
 }
 
+inline std::list<std::string> TrieNode::unwrap_words(const std::list<const TrieNode *> &candidates) const
+{
+    std::list<const TrieNode *> word_nodes;
+    for (auto candidate : candidates)
+    {
+        auto words = candidate->word_nodes();
+        word_nodes.insert(word_nodes.end(), words.begin(), words.end());
+    }
+
+    std::list<std::string> result;
+    word_nodes.sort([](auto a, auto b)
+                    { return a->insertion_count > b->insertion_count; });
+
+    for (auto node : word_nodes)
+    {
+        result.push_back(this->reconvert(node->word));
+    }
+
+    return result;
+}
+
 std::list<std::string> TrieNode::complete(const std::string &prefix) const
 {
     std::list<std::string> result;
@@ -127,29 +146,22 @@ std::list<std::string> TrieNode::complete(const std::string &prefix) const
         current = current->children.at(prefix[i]);
     }
 
-    std::list<const TrieNode *> word_nodes = current->word_nodes();
-
-    word_nodes.sort([](auto a, auto b)
-                    { return a->insertion_count > b->insertion_count; });
-
-    for (auto node : word_nodes)
-    {
-        result.push_back(this->reconvert(node->word));
-    }
-
-    return result;
+    return this->unwrap_words({current});
 }
 
-
-std::list<std::string> TrieNode::ambiguous_complete(const std::list<std::string>& prefix_groups) const {
-    std::list<std::string> result;
-    std::list<const TrieNode*> candidates = {this};
-    for (auto gr: prefix_groups) {
+std::list<std::string> TrieNode::ambiguous_complete(const std::list<std::string> &prefix_groups) const
+{
+    std::list<const TrieNode *> candidates = {this};
+    for (auto gr : prefix_groups)
+    {
         std::wstring group = this->convert(gr);
-        std::list<const TrieNode*> new_candidates;
-        for (int i=0; i< group.size(); i++) {
-            for (auto candidate: candidates) {
-                if (candidate->children.count(group[i])) {
+        std::list<const TrieNode *> new_candidates;
+        for (int i = 0; i < group.size(); i++)
+        {
+            for (auto candidate : candidates)
+            {
+                if (candidate->children.count(group[i]))
+                {
                     new_candidates.push_back(candidate->children.at(group[i]));
                 }
             }
@@ -157,21 +169,7 @@ std::list<std::string> TrieNode::ambiguous_complete(const std::list<std::string>
         candidates = std::move(new_candidates);
     }
 
-    std::list<const TrieNode *> word_nodes;
-    for (auto candidate: candidates) {
-        auto words = candidate->word_nodes();
-        word_nodes.insert(word_nodes.end(), words.begin(), words.end());
-    }
-
-    word_nodes.sort([](auto a, auto b)
-                    { return a->insertion_count > b->insertion_count; });
-
-    for (auto node : word_nodes)
-    {
-        result.push_back(this->reconvert(node->word));
-    }
-
-    return result;
+    return this->unwrap_words(candidates);
 }
 
 Trie::Trie() : TrieNode(0) {}
