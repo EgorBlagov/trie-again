@@ -5,8 +5,6 @@
 #include <list>
 #include <unordered_map>
 
-const int CHAR_SIZE = 26;
-
 class TrieNode
 {
 private:
