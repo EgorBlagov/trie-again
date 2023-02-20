@@ -110,4 +110,10 @@ poetry build -f sdist
 
 ## Read an article about the trie, friends!
 
+### Initial implementation
+
 https://blagovdaryu.hashnode.dev/ok-lets-trie-t9-in-python
+
+### C++, Cython and Poetry
+
+https://blagovdaryu.hashnode.dev/tremendously-speed-up-python-code-with-cython-and-package-it-with-poetry
